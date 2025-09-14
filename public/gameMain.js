@@ -131,8 +131,8 @@ class Character {
 function gameMain() {
   const config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 800,
+    width: 1600,
+    height: 1600,
     backgroundColor: '#7ec850',
     parent: 'game-container',
     scene: [createScene()]
