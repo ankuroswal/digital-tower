@@ -212,6 +212,12 @@ function updateGame() {
     } else {
       this.interactText.setVisible(false);
     }
+
+    // Expose UI state
+    window.gameUIState = {
+      canInteract: this.interactText.visible,
+      interactionText: this.interactText.visible ? this.interactText.text : '',
+    };
 }
 
 // --- Helper functions ---

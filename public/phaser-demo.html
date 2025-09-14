@@ -13,5 +13,11 @@
     <div id="game-container"></div>
     <script src="gameMain.js"></script>
     <script> gameMain(); </script>
+    <button id="game-state-btn" style="position:absolute;top:300px;left:10px;background:#3498db;color:#fff;padding:10px;max-width:400px;z-index:2000;">Show Game State</button>
+    <script>
+      document.getElementById('game-state-btn').onclick = function() {
+        alert(window.gameUIState.interactionText);
+      };
+    </script>
   </body>
 </html>
