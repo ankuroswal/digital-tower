@@ -132,7 +132,7 @@ function gameMain() {
   const config = {
     type: Phaser.AUTO,
     width: 1600,
-    height: 1600,
+    height: 900,
     backgroundColor: '#7ec850',
     parent: 'game-container',
     scene: [createScene()]
