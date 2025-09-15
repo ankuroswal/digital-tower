@@ -182,12 +182,11 @@ function updateGameServer(scene, serverGameState) {
     if (!scene.gameState.clientData)
         scene.gameState.clientData = { characters: [] };
 
-    const currentTime = Date.now();
-    if (currentTime > serverGameState.timestamp) {
+    if (scene.gameState.clientData.timestamp > serverGameState.timestamp) {
         return; 
     }
 
-    scene.gameState.clientData.timestamp = currentTime;
+    scene.gameState.clientData.timestamp = serverGameState.timestamp;
     const users = serverGameState.users;
     clientChars = scene.gameState.clientData.characters;
     console.log("current clients:", clientChars);
