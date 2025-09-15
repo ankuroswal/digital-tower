@@ -226,24 +226,6 @@ function updateGameServer(scene, serverGameState) {
 
 // Game object setup
 function createGameObjects() {
-    // Draw grid
-    
-    const gridGraphics = this.add.graphics();
-    gridGraphics.lineStyle(1, '#110101ff', 0.5);
-    for (let x = 0; x <= 1600; x += world_config.grid_size) {
-        gridGraphics.beginPath();
-        gridGraphics.moveTo(x, 0);
-        gridGraphics.lineTo(x, 900);
-        gridGraphics.strokePath();
-    }
-    for (let y = 0; y <= 900; y += world_config.grid_size) {
-        gridGraphics.beginPath();
-        gridGraphics.moveTo(0, y);
-        gridGraphics.lineTo(1600, y);
-        gridGraphics.strokePath();
-    }
-    gridGraphics.setDepth(1);
-
     // Statue setup
     this.statue = this.add.rectangle(400, 300, 40, 40, 0x888888).setStrokeStyle(2, 0xffffff);
     this.statue.setDepth(10);
@@ -317,6 +299,8 @@ function updateCharacter() {
     this.statsText.setText(statsStr);
     this.statsText.setVisible(true);
 }
+
+//// server actions..
 
 // Direction enum
 const Direction = {
