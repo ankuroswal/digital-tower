@@ -182,6 +182,12 @@ function updateGameServer(scene, serverGameState) {
     if (!scene.gameState.clientData)
         scene.gameState.clientData = { characters: [] };
 
+    const currentTime = Date.now();
+    if (currentTime > serverGameState.timestamp) {
+        return; 
+    }
+
+    scene.gameState.clientData.timestamp = currentTime;
     const users = serverGameState.users;
     clientChars = scene.gameState.clientData.characters;
     console.log("current clients:", clientChars);
@@ -301,7 +307,6 @@ function updateCharacter() {
 }
 
 //// server actions..
-
 // Direction enum
 const Direction = {
     UP: 'up',
