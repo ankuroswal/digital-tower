@@ -27,16 +27,24 @@
     </div>
     <script>
       document.getElementById('btn-up').onclick = function() {
-        moveCharacter(window.activeScene, 'up');
+        const serverData = sup.get("server_data");
+        moveCharacter(window.activeScene, 'up', serverData);
+        sup.set("server_data", serverData);
       };
       document.getElementById('btn-down').onclick = function() {
-        moveCharacter(window.activeScene, 'down'); 
+        const serverData = sup.get("server_data");
+        moveCharacter(window.activeScene, 'down', serverData);
+        sup.set("server_data", serverData);
       };
       document.getElementById('btn-left').onclick = function() {
-        moveCharacter(window.activeScene, 'left');
+        const serverData = sup.get("server_data");
+        moveCharacter(window.activeScene, 'left', serverData);
+        sup.set("server_data", serverData);
       };
       document.getElementById('btn-right').onclick = function() {
-        moveCharacter(window.activeScene, 'right');
+        const serverData = sup.get("server_data");
+        moveCharacter(window.activeScene, 'right', serverData);
+        sup.set("server_data", serverData);
       };
     </script>
   </body>

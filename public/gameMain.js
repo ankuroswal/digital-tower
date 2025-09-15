@@ -313,18 +313,6 @@ function updateCharacter() {
     this.statsText.setVisible(true);
 }
 
-// Fetch server data and update game state
-function server_fetchAndUpdate(scene) {
-    const serverData = sup.get("server_data");
-    console.log("Fetched server data:", serverData);
-    updateGameServer(scene, serverData);
-}
-
-function server_setServerData(newGameState) {
-    console.log("Setting server data:", newGameState);
-    sup.set("server_data", newGameState);
-}
-
 // Direction enum
 const Direction = {
     UP: 'up',
@@ -334,7 +322,7 @@ const Direction = {
 };
 
 // Move character and update server
-function moveCharacter(scene, direction) {
+function moveCharacter(scene, direction, serverData) {
     let dx = 0, dy = 0;
     switch (direction) {
         case Direction.LEFT:  dx -= world_config.grid_size; break;
@@ -344,13 +332,12 @@ function moveCharacter(scene, direction) {
     }
 
     const userId = 1;
-    const serverData = sup.get("server_data");
     const charData = serverData.users[userId];
     if (charData) {
         charData.position.x = Math.round((charData.position.x + dx) / world_config.grid_size) * world_config.grid_size;
         charData.position.y = Math.round((charData.position.y + dy) / world_config.grid_size) * world_config.grid_size;
     }
-
-    server_setServerData(serverData);
-    server_fetchAndUpdate(scene); 
+    
+    updateGameServer(scene, serverData);
+    return serverData;
 }
