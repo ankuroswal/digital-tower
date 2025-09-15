@@ -286,36 +286,12 @@ function updateGame() {
     updateCharacter.call(this);
 }
 
-function handleInput(character, direction) {
-    let dx = 0, dy = 0;
-    switch (direction) {
-        case Direction.LEFT:
-            dx -= world_config.grid_size;
-            break;
-        case Direction.RIGHT:
-            dx += world_config.grid_size;
-            break;
-        case Direction.UP:
-            dy -= world_config.grid_size;
-            break;
-        case Direction.DOWN:
-            dy += world_config.grid_size;
-            break;
-        default:
-            break;
-    }
-    if (dx !== 0 || dy !== 0) {
-        character.x = Math.round((character.x + dx) / world_config.grid_size) * world_config.grid_size;
-        character.y = Math.round((character.y + dy) / world_config.grid_size) * world_config.grid_size;
-    }
-};
-
 function updateCharacter() {
     if (!this.character) {
         return;
     }
 
-    // this.statsText.setVisible(true);
+    this.statsText.setVisible(true);
     this.cameras.main.setBounds(0, 0, world_config.width, world_config.height);
     this.cameras.main.startFollow(this.character.sprite, true, 0.1, 0.1);
 
@@ -344,6 +320,15 @@ function server_setServerData(newGameState) {
     sup.set("server_data", newGameState);
 }
 
+// Direction enum
+const Direction = {
+    UP: 'up',
+    DOWN: 'down',
+    LEFT: 'left',
+    RIGHT: 'right'
+};
+
+// Move character and update server
 function moveCharacter(scene, direction) {
     let dx = 0, dy = 0;
     switch (direction) {
