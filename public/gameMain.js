@@ -148,7 +148,7 @@ function gameMain(initialServerData) {
         height: 900,
         backgroundColor: '#7ec850',
         parent: 'game-container',
-        scene: [createScene(initialServerData)] // <-- pass it down
+        scene: [createScene(initialServerData)]
     };
     new Phaser.Game(config);
 }
@@ -171,6 +171,11 @@ function createScene(initialServerData) {
 
 // Sync client and server character data
 function updateGameServer(scene, serverGameState) {
+    if (serverGameState === undefined || serverGameState.users === undefined) {
+        console.warn("No server game state provided to updateGameServer");
+        return;
+    }
+    
     if (!scene.gameState)
         scene.gameState = new GameState();
 
