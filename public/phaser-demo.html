@@ -15,7 +15,10 @@
   <body>
     <div id="game-container"></div>
     <script src="gameMain.js"></script>
-    <script> gameMain(); </script>
+    <script> 
+      const serverData = sup.get("server_data");
+      gameMain(serverData); 
+  </script>
     <div id="controls" style="position:fixed;bottom:80px;right:400px;z-index:2000;text-align:center;">
       <button id="btn-up">↑</button><br>
       <button id="btn-left">←</button>

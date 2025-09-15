@@ -141,26 +141,33 @@ class GameState {
     }
 }
 
-// Entry point: sets up Phaser and starts the game
-function gameMain() {
+function gameMain(initialServerData) {
     const config = {
         type: Phaser.AUTO,
         width: 1600,
         height: 900,
         backgroundColor: '#7ec850',
         parent: 'game-container',
-        scene: [createScene()]
+        scene: [createScene(initialServerData)] // <-- pass it down
     };
     new Phaser.Game(config);
 }
 
-function createScene() {
+function createScene(initialServerData) {
     return {
-        create: createGameObjects,
+        create() {
+            window.activeScene = this;
+
+            // make sure gameState exists
+            if (!this.gameState) 
+                this.gameState = new GameState();
+
+            createGameObjects.call(this);
+            updateGameServer(this, initialServerData);
+        },
         update: updateGame
     };
 }
-
 
 // Sync client and server character data
 function updateGameServer(scene, serverGameState) {
@@ -214,8 +221,8 @@ function updateGameServer(scene, serverGameState) {
 
 // Game object setup
 function createGameObjects() {
-    window.activeScene = this;     // <-- keep a global pointer to the scene
     // Draw grid
+    
     const gridGraphics = this.add.graphics();
     gridGraphics.lineStyle(1, '#110101ff', 0.5);
     for (let x = 0; x <= 1600; x += world_config.grid_size) {
@@ -261,8 +268,6 @@ function createGameObjects() {
     this.interactText.setScrollFactor(0);
     this.interactText.setDepth(1001);
     this.interactText.setVisible(false);
-
-    server_fetchAndUpdate(this);
 }
 
 // Game update loop
