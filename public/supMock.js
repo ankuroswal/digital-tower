@@ -152,6 +152,3 @@ sup.html = (html, options) => {
   sup._lastInjectedElement = mockElement;
   return mockElement;
 };
-
-// Expose `sup` globally within `supMock.js` so it can be accessed throughout the application without explicit imports.
-export default sup;
