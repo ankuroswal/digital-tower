@@ -9,17 +9,22 @@ class Character {
     // ---------- defaults & helpers ----------
     static defaults() {
         return {
+            userid: 0,
             name: 'Hero',
             level: 1,
-            hp: 100, maxHp: 100,
-            mp: 30, maxMp: 30,
-            attack: 10,
-            defense: 8,
-            speed: 2,
+            hp: 100,
+            maxHp: 100,
+            intelligence: 0,
+            might: 0,
+            agility: 0,
             exp: 0,
             gold: 0,
+            skillpoints: 3,
             inventory: [],
-            position: { x: 200, y: 150 },
+            position: {
+                x: 200,
+                y: 150
+            }
         };
     }
 
@@ -136,24 +141,25 @@ const world_config = {
 
 class GameState {
     clientData;
+    userid;
     constructor() {
         this.clientData = { characters: [] };
     }
 }
 
-function gameMain(initialServerData) {
+function gameMain(initialServerData, userId) {
     const config = {
         type: Phaser.AUTO,
         width: 1600,
         height: 900,
         backgroundColor: '#7ec850',
         parent: 'game-container',
-        scene: [createScene(initialServerData)]
+        scene: [createScene(initialServerData, userId)]
     };
     new Phaser.Game(config);
 }
 
-function createScene(initialServerData) {
+function createScene(initialServerData, userId) {
     return {
         create() {
             window.activeScene = this;
@@ -163,14 +169,14 @@ function createScene(initialServerData) {
                 this.gameState = new GameState();
 
             createGameObjects.call(this);
-            updateGameServer(this, initialServerData);
+            updateGameServer(this, initialServerData, userId);
         },
         update: updateGame
     };
 }
 
 // Sync client and server character data
-function updateGameServer(scene, serverGameState) {
+function updateGameServer(scene, serverGameState, userId) {
     if (serverGameState === undefined || serverGameState.users === undefined) {
         console.warn("No server game state provided to updateGameServer");
         return;
@@ -186,6 +192,7 @@ function updateGameServer(scene, serverGameState) {
         return; 
     }
 
+    scene.gameState.userid = userId;
     scene.gameState.clientData.timestamp = serverGameState.timestamp;
     const users = serverGameState.users;
     clientChars = scene.gameState.clientData.characters;
@@ -264,22 +271,44 @@ function createGameObjects() {
 
 // Game update loop
 function updateGame() {
-    const clientChars = this.gameState?.clientData?.characters;
-    for (clientCharacter of clientChars) {
-        character = clientCharacter.character;
-        if (!character)
+    const clientChars = this.gameState.clientData.characters;
+    for (const clientCharacter of clientChars) {
+
+        const character = clientCharacter.character;
+        if (!character) 
             continue;
 
         const position = character.position;
         if (!clientCharacter.sprite) {
-            clientCharacter.sprite = this.add.circle(position.x + world_config.grid_size * .5, position.y + world_config.grid_size * .5, 20, 0x3498db);
+            clientCharacter.sprite = this.add.circle(position.x + world_config.grid_size * .5, position.y + world_config.grid_size * .5, character.size || 20, 0x3498db);
             console.log("Added new sprite for character:", clientCharacter);
         }
 
+        if (character.userid == this.gameState.userid) {
+            this.character = clientCharacter;
+        }
+        
         clientCharacter.sprite.x = position.x + world_config.grid_size * 0.5;
         clientCharacter.sprite.y = position.y + world_config.grid_size * 0.5;
+        // Create nameplate if missing
+        if (!clientCharacter.nameplate) {
+            clientCharacter.nameplate = this.add.text(0, 0, character.name, {
+                font: '14px monospace',
+                fill: '#fff',
+                backgroundColor: 'rgba(0,0,0,0.5)',
+                padding: { left: 4, right: 4, top: 2, bottom: 2 },
+                align: 'center'
+            });
+            clientCharacter.nameplate.setDepth(1002);
+        }
+        // Position nameplate above sprite
+        clientCharacter.nameplate.x = clientCharacter.sprite.x - clientCharacter.nameplate.width / 2;
+        clientCharacter.nameplate.y = clientCharacter.sprite.y - (character.size || 20) - clientCharacter.nameplate.height - 4;
+        // Update name if changed
+        if (clientCharacter.nameplate.text !== character.name) {
+            clientCharacter.nameplate.setText(character.name);
+        }
     }
-
     updateCharacter.call(this);
 }
 
@@ -288,21 +317,10 @@ function updateCharacter() {
         return;
     }
 
-    this.statsText.setVisible(true);
-    this.cameras.main.setBounds(0, 0, world_config.width, world_config.height);
+    this.cameras.main.setBounds(0, 0, world_config.width * 1.5, world_config.height * 1.5);
     this.cameras.main.startFollow(this.character.sprite, true, 0.1, 0.1);
-
-    const stats = this.character.snapshot();
-    let statsStr = '';
-    for (const key in stats) {
-        if (typeof stats[key] === 'object') {
-            statsStr += `${key}: ${JSON.stringify(stats[key])}\n`;
-        } else {
-            statsStr += `${key}: ${stats[key]}\n`;
-        }
-    }
-    this.statsText.setText(statsStr);
-    this.statsText.setVisible(true);
+    this.cameras.main.setZoom(1);
+    this.cameras.main.roundPixels = true;
 }
 
 //// server actions..
