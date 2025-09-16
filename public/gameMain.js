@@ -319,7 +319,7 @@ function updateCharacter() {
 
     this.cameras.main.setBounds(0, 0, world_config.width * 1.5, world_config.height * 1.5);
     this.cameras.main.startFollow(this.character.sprite, true, 0.1, 0.1);
-    this.cameras.main.setZoom(1);
+    this.cameras.main.setZoom(3);
     this.cameras.main.roundPixels = true;
 }
 
