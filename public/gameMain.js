@@ -229,6 +229,10 @@ const ServerStore = {
             inventory: sup.user.get(USER_STORE_KEYS.inventory) || [],
         };
 
+        console.log("Server snapshot for users", users);
+        console.log("Server snapshot for users", sceneById);
+        console.log("Server snapshot for users", scene);
+
         return {
             timestamp: Date.now(),
             users,
@@ -290,8 +294,10 @@ class ClientStore {
         }
 
         // Ignore stale or duplicate snapshots
-        if (this.snapshot && this.snapshot.timestamp >= snapshot.timestamp) return;
+        if (this.snapshot && this.snapshot.timestamp >= snapshot.timestamp) 
+            return;
 
+        console.log("Applying user snapshot:", snapshot);
         this.userId = userId;
         this.snapshot = snapshot;
 
@@ -403,6 +409,10 @@ function createGameObjects() {
     this.interactText.setScrollFactor(0);
     this.interactText.setDepth(1001);
     this.interactText.setVisible(false);
+
+    this.cameras.main.setBounds(0, 0, WORLD_CONFIG.width * 1.5, WORLD_CONFIG.height * 1.5);
+    this.cameras.main.setZoom(2);
+    this.cameras.main.roundPixels = true;
 }
 
 
@@ -418,6 +428,10 @@ function updateGame() {
         if (!clientCharacter.sprite) {
             clientCharacter.sprite = this.add.circle(position.x + WORLD_CONFIG.grid_size * .5, position.y + WORLD_CONFIG.grid_size * .5, character.size || 20, 0x3498db);
             console.log("Added new sprite for character:", clientCharacter);
+        }
+
+        if (clientCharacter.id === this.clientStore.userId) {
+            this.cameras.main.startFollow(clientCharacter.sprite, true, 0.1, 0.1);
         }
 
         clientCharacter.sprite.x = position.x + WORLD_CONFIG.grid_size * 0.5;
