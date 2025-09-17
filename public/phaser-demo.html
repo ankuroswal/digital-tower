@@ -1,51 +1,55 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Phaser Test</title>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
-    <script src="supMock.js"></script>
-    <script src="supInit.js"></script>
-    <script> initMock(); </script>
-    <style>
-      body { margin:0; background:#474747; }
-      #game-container { margin:0px; width:800; height:800;}
-    </style>
-  </head>
-  <body>
-    <div id="game-container"></div>
-    <script src="gameMain.js"></script>
-    <script> 
-      const serverData = sup.get("server_data");
-      gameMain(serverData, 1); 
+
+<head>
+  <meta charset="utf-8" />
+  <title>Phaser Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
+  <script src="supMock.js"></script>
+  <script src="gameMain.js"></script>
+  <script src="supInit.js"></script>
+  <script> initMock(); </script>
+  <style>
+    body {
+      margin: 0;
+      background: #474747;
+    }
+
+    #game-container {
+      margin: 0px;
+      width: 800;
+      height: 800;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="game-container"></div>
+  <script>
+    const snapshot = ServerStore.getSnapshot();
+    console.log('snapshot', snapshot);
+    gameMain(snapshot, getUserId()); 
   </script>
-    <div id="controls" style="position:fixed;bottom:80px;right:400px;z-index:2000;text-align:center;">
-      <button id="btn-up">↑</button><br>
-      <button id="btn-left">←</button>
-      <button id="btn-down">↓</button>
-      <button id="btn-right">→</button>
-    </div>
-    <script>
-      document.getElementById('btn-up').onclick = function() {
-        const serverData = sup.get("server_data");
-        moveCharacter(window.activeScene, 'up', serverData);
-        sup.set("server_data", serverData);
-      };
-      document.getElementById('btn-down').onclick = function() {
-        const serverData = sup.get("server_data");
-        moveCharacter(window.activeScene, 'down', serverData);
-        sup.set("server_data", serverData);
-      };
-      document.getElementById('btn-left').onclick = function() {
-        const serverData = sup.get("server_data");
-        moveCharacter(window.activeScene, 'left', serverData);
-        sup.set("server_data", serverData);
-      };
-      document.getElementById('btn-right').onclick = function() {
-        const serverData = sup.get("server_data");
-        moveCharacter(window.activeScene, 'right', serverData);
-        sup.set("server_data", serverData);
-      };
-    </script>
-  </body>
+  <div id="controls" style="position:fixed;bottom:80px;right:400px;z-index:2000;text-align:center;">
+    <button id="btn-up">↑</button><br>
+    <button id="btn-left">←</button>
+    <button id="btn-down">↓</button>
+    <button id="btn-right">→</button>
+  </div>
+  <script>
+    document.getElementById('btn-up').onclick = function () {
+      MockMove(window.activeScene, 'up');
+    };
+    document.getElementById('btn-down').onclick = function () {
+      MockMove(window.activeScene, 'down');
+    };
+    document.getElementById('btn-left').onclick = function () {
+      MockMove(window.activeScene, 'left');
+    };
+    document.getElementById('btn-right').onclick = function () {
+      MockMove(window.activeScene, 'right');
+    };
+  </script>
+</body>
+
 </html>

@@ -21,6 +21,15 @@ const sup = {
       console.log("Mock sup.chat.set called with:", { key, value });
     }
   },
+  global: {
+    get: (key) => {
+      console.log("Mock sup.global.get called with key:", key);
+      return null; // Default mock response
+    },
+    set: (key, value) => {
+      console.log("Mock sup.global.set called with:", { key, value });
+    }
+  },
   get: (key) => {
     console.log("Mock sup.get called with key:", key);
     return null; // Default mock response
@@ -115,6 +124,29 @@ sup.set = (key, value) => {
 };
 
 // Simple user-scoped storage helpers
+sup.global = {
+  set: (key, value) => {
+    try {
+      sup._data.set(`global:${key}`, value);
+      console.log(`Mock sup.global.set called with: global:${key}`, value);
+    } catch (e) {
+      console.error('sup.global.set error', e);
+    }
+  },
+  get: (key) => {
+    try {
+      const v = sup._data.get(`global:${key}`);
+      console.log(`Mock sup.global.get called for global:${key} ->`, v);
+      return v === undefined ? null : v;
+    } catch (e) {
+      console.error('sup.global.get error', e);
+      return null;
+    }
+  }
+};
+
+
+// Simple user-scoped storage helpers
 sup.user = {
   set: (key, value) => {
     try {
@@ -133,7 +165,9 @@ sup.user = {
       console.error('sup.user.get error', e);
       return null;
     }
-  }
+  },
+  id: "",
+  displayName: ""
 };
 
 sup.html = (html, options) => {

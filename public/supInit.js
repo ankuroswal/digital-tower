@@ -1,25 +1,19 @@
 function initMock()
 {
-const default_userId = 1;
+    ServerStore.debug.createMockUser({
+      userid: "u_123",
+      displayName: "Alice",
+      position: { x: 200, y: 150 },
+      stats: { ...DEFAULT_STATS, intelligence: 2, might: 1 },
+      skillpoints: 1,
+      inventory: ["sword", "potion"],
+      updatedAt: 1731803999000,
+    }, true);
 
-  sup.set("server_data", {
-    users: {
-      [default_userId]: {
-        userid: default_userId, 
-        name: 'Hero',
-        level: 1,
-        hp: 100,
-        maxHp: 100,
-        mp: 30,
-        maxMp: 30,
-        attack: 10,
-        defense: 8,
-        speed: 2,
-        exp: 0,
-        gold: 0,
-        inventory: [],
-        position: { x: 200, y: 150 }
-      }
-    }
-  });
+    ServerStore.debug.createMockUser({
+      userid: "u_456",
+      displayName: "Bob",
+      position: { x: 240, y: 150 },
+      stats: { ...DEFAULT_STATS },
+    });
 }
